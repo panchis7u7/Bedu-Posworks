@@ -1,6 +1,6 @@
-## Postwork sesión 7
+## Postwork sesión 2
 En este link puedes ver el documento formal del PostWork! =>
-[PostWork RPubs](https://rpubs.com/Panchis/Postwork7)
+[PostWork RPubs](https://rpubs.com/carlostenorio/postwork2R)
 
 ## Equipo 3 - BEDU
 
