@@ -1,11 +1,7 @@
-#Postwork sesión 2
-#Carlos Rodríguez Tenorio
-#rrotenorio@gmail.com
-#CDMIT -UNAM
+# author: Morales Corona Diego Armando.
 
-#1. Importar los datos de soccer de las temporadas 2017/2018, 
-#2018/2019 y 2019/2020 de la primera división de la liga 
-#española a R.
+########### RETOMAMOS EL POSTWORK 2 ###########
+
 setwd('C:/Users/MORALES/Desktop/BEDU postwoks/P2')
 suppressMessages(suppressWarnings(library(dplyr)))
 library(dplyr)
@@ -21,51 +17,42 @@ download.file(dataurl1920, destfile = "dataurl1920.csv", mode = "wb")
 
 lista <- lapply(dir(), read.csv)
 
-#2. Obten una mejor idea de las características de los data frames al usar 
-#las funciones: str, head, View y summary
-str(lista[[1]]); head(lista[[1]]); summary(lista[[1]]); View(lista[[1]])
-str(lista[[2]]); head(lista[[2]]); summary(lista[[2]]); View(lista[[2]])
-str(lista[[3]]); head(lista[[3]]); summary(lista[[3]]); View(lista[[3]])
-
-#3. Con la función select del paquete dplyr selecciona únicamente las columnas 
-#Date, HomeTeam, AwayTeam, FTHG, FTAG y FTR; esto para cada uno de los data frames.
-
 lista <- lapply(lista,select, Date, HomeTeam, AwayTeam, FTHG, FTAG, FTR)
-
-#4. Asegúrate de que los elementos de las columnas correspondientes de 
-#los nuevos data frames sean del mismo tipo (Hint 1: usa as.Date 
-#y mutate para arreglar las fechas). Con ayuda de la función rbind 
-#forma un único data frame que contenga las seis columnas mencionadas 
-#en el punto 3.
 
 data <- do.call(rbind, lista)
 str(data)
 data <- mutate(data, Date = as.Date(Date, "%d/%m/%y"))
 data <- rename(data, goles_local = FTHG, goles_visita = FTAG)
 
+##########################################################
+###################### POSTWORK 3 ########################
+##########################################################
+
+
 n_partidos <- length(data[,1])
-### Tabla goles_local
+################ Tabla goles_local #######################
 t_goles_local <- table(data$goles_local)
 p_goles_local <- t_goles_local[1:length(t_goles_local)]/n_partidos
 locales <- data.frame(frecuencia = t_goles_local, probabilidad = p_goles_local)
 locales <- locales[, -c(3)]
 locales <- rename(locales, goles = frecuencia.Var1, frecuencia = frecuencia.Freq, probabilidad = probabilidad.Freq)
 
-### Tabla goles_local
+################# Tabla goles_local ######################
 t_goles_visit <- table(data$goles_visita)
 p_goles_visit <- t_goles_visit/n_partidos
 visita <- data.frame(frecuencia = t_goles_visit, probabilidad = p_goles_visit)
 visita <- visita[, -c(3)]
 visita <- rename(visita, goles = frecuencia.Var1, frecuencia = frecuencia.Freq, probabilidad = probabilidad.Freq)
 
-### Tabla conjunta
+################# Tabla conjunta ##########################
 l <- locales$goles
 v <- visita$goles
 cart <- expand.grid(l, v)
 cart[, 3] = rep(0, length(cart[, 1]))
 cart <- rename(cart, local = Var1, visita = Var2, freq = V3)
 
-########## dataFrame con goles_local/goles_visita/freq
+########## dataFrame con goles_local/goles_visita/freq #####
+
 for(i in 1:length(data[, 1])){
   for(j in 1:length(cart[, 1])){
     if((data[i,4] == cart[j, 1]) & (data[i,5] == cart[j, 2])){
@@ -78,7 +65,7 @@ cart[,4] = cart$freq / n_partidos
 cart = rename(cart, probabilidad = V4)
 
 
-### Graficas
+####################### Graficas ############################
 ggplot(locales, aes(x = goles, y = probabilidad)) + 
   geom_col(colour = "black", fill= "orange") +
   geom_text(aes(y = round(probabilidad, 4), label = round(probabilidad, 4)), 
@@ -95,7 +82,7 @@ ggplot(visita, aes(x = goles, y = probabilidad)) +
   ggtitle("Probabilidades marginales de goles de equipos visitantes") + 
   xlab("Goles") +
   ylab("Probabilidades") +
-  theme_replace()
+  theme_minimal()
 
 ggplot(cart, aes(x = local, y = visita, fill = probabilidad)) + 
   geom_tile() +
