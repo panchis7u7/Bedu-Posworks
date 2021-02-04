@@ -1,6 +1,6 @@
 ## Postwork sesión 8
 En este link puedes ver el documento formal del PostWork! =>
-[PostWork RPubs](https://carlostnorio.shinyapps.io/Postwork8/)
+[PostWork ShinyApp](https://carlostnorio.shinyapps.io/Postwork8/)
 
 ## Equipo 3 - BEDU
 
